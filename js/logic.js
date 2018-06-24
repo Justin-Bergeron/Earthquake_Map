@@ -1,3 +1,11 @@
+// TODO:
+//make the circles change size with the map zoooming in and Out
+//get the new api info and fit it in
+// change the color of the circle based on severity
+//change the size based on severity
+//add the slider
+//
+
 // Create the tile layer that will be the background of our map
 var lightmap = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 	accessToken: 'pk.eyJ1Ijoic2xhdmVwYXBlciIsImEiOiJjamlkdzR2ODAwZzI5M3BxeTViYnE5a3hiIn0.nGPKpOZ6a5DCT9pT0Qc1TA',
@@ -45,7 +53,7 @@ L.control.layers(null, overlays).addTo(map);
 
 // Create a legend to display information about our map
 var info = L.control({
-  position: "bottomright"
+  position: "bottomleft"
 });
 
 // When the layer control is added, insert a div with the class of "legend"
@@ -58,36 +66,36 @@ info.addTo(map);
 
 // Initialize an object containing icons for each layer group
 var icons = {
-  COMING_SOON: L.ExtraMarkers.icon({
-    icon: "ion-settings",
-    iconColor: "white",
-    markerColor: "yellow",
-    shape: "star"
-  }),
-  EMPTY: L.ExtraMarkers.icon({
-    icon: "ion-android-bicycle",
-    iconColor: "white",
-    markerColor: "red",
-    shape: "circle"
-  }),
-  OUT_OF_ORDER: L.ExtraMarkers.icon({
-    icon: "ion-minus-circled",
-    iconColor: "white",
-    markerColor: "blue-dark",
-    shape: "penta"
-  }),
-  LOW: L.ExtraMarkers.icon({
-    icon: "ion-android-bicycle",
-    iconColor: "white",
-    markerColor: "orange",
-    shape: "circle"
-  }),
-  NORMAL: L.ExtraMarkers.icon({
-    icon: "ion-android-bicycle",
-    iconColor: "white",
-    markerColor: "green",
-    shape: "circle"
-  })
+  COMING_SOON: {
+		color: '#FF9E2C',
+    fillColor: '#FF9E2C',
+    fillOpacity: 0.5,
+    radius: 100
+  },
+  EMPTY: {
+		color: '#000000',
+    fillColor: '#EC9E2C',
+    fillOpacity: 0.5,
+    radius: 100
+  },
+  OUT_OF_ORDER: {
+		color: '#FFFFFF',
+    fillColor: '#9416e7',
+    fillOpacity: 0.5,
+    radius: 100
+  },
+  LOW: {
+		color: '#FFDDFF',
+    fillColor: '#FFDDFF',
+    fillOpacity: 0.5,
+    radius: 100
+  },
+  NORMAL: {
+		color: '#9416b7',
+    fillColor: '#9416b7',
+    fillOpacity: 0.2,
+    radius: 200
+  },
 };
 
 // Perform an API call to the Citi Bike Station Information endpoint
@@ -140,9 +148,9 @@ d3.json("https://gbfs.citibikenyc.com/gbfs/en/station_information.json", functio
       // Update the station count
       stationCount[stationStatusCode]++;
       // Create a new marker with the appropriate icon and coordinates
-      var newMarker = L.marker([station.lat, station.lon], {
-        icon: icons[stationStatusCode]
-      });
+      var newMarker = L.circle([station.lat, station.lon],        //add L.circle here to make circles
+        icons[stationStatusCode]
+      );
 
       // Add the new marker to the appropriate layer
       newMarker.addTo(layers[stationStatusCode]);
@@ -156,7 +164,7 @@ d3.json("https://gbfs.citibikenyc.com/gbfs/en/station_information.json", functio
   });
 });
 
-// Update the legend's innerHTML with the last updated time and station count
+// Update the legend's innerHTML with the last updated time and station count        these colors are styled in the css obvi
 function updateLegend(time, stationCount) {
   document.querySelector(".legend").innerHTML = [
     "<p>Updated: " + moment.unix(time).format("h:mm:ss A") + "</p>",
