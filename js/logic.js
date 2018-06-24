@@ -4,7 +4,7 @@
 // change the color of the circle based on severity
 //change the size based on severity
 //add the slider
-//
+//python -m http.server use this to initate the local server on the file
 
 // Create the tile layer that will be the background of our map
 var lightmap = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
